@@ -20,7 +20,8 @@ def check():
         title = titleid['title'].values[0]
         print(title)
         f = open(fname, "r")
-        download_title = re.sub('For:', '', f.readline()).lower().lstrip()
+        download_title = re.sub('For:', '', f.readline())
+        download_title = download_title.lower()
         print(download_title)
         similarity_score = 1 - nltk.edit_distance(title.lower(), download_title) / len(download_title)
         print(similarity_score)
@@ -29,12 +30,13 @@ def check():
         if similarity_score < threshold:
             if title not in download_title and download_title not in title:
                 # passes
-                # print("------ CHECK THIS -------")
+                print("------ REMOVED -------")
                 os.remove(fname)
                 simscores.remove(similarity_score)
 
     plt.hist(simscores)
     plt.show()
+    print('avg:', sum(simscores)/len(simscores))
 
 
 if __name__ == '__main__':

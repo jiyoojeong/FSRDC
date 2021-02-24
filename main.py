@@ -68,6 +68,11 @@ def scrape():
     citations = []
     citation_lengths = []
     use_journal = False
+    try:
+        spelling_checks = pd.read_csv('input_data/spellingchecks.csv', header=0)
+    except:
+        spelling_checks = pd.DataFrame(columns=['aid', 'title'])
+
     for idx, row in bare_details.iterrows():
         aid = row['article_id']
         title = row['title']
@@ -124,13 +129,23 @@ def scrape():
                 # print('us changed==', title)
             #print('quotes changed==', title)
 
+        if re.search(r'wellbeing', title):
+            title = re.sub(r'wellbeing', 'well being', title)
+                # print('us changed==', title)
+            #print('quotes changed==', title)
+
+        if re.search(r'\bwhats\b', title):
+            title = re.sub(r'\bwhats\b', 'what s', title)
+                # print('us changed==', title)
+            #print('quotes changed==', title)
+
         journal = row['journal']
         year = row['year']
         if 'output_data/raw' not in os.getcwd():
             os.chdir('output_data/raw')
         if str(aid) + '.txt' in os.listdir():
             print('this is already downloaded.')
-        elif idx < 0:
+        elif idx < 0 or aid not in spelling_checks['aid']:
             print('this has already been looked up. skipping.')
         else:
             search_bar = WebDriverWait(driver, 100).until(
@@ -197,12 +212,17 @@ def scrape():
                     time.sleep(np.random.uniform(1, 2))
                     print('sending.')
                     driver.find_element_by_xpath('//*[@id="searchCell2"]/span[1]/button').click()  # send keys
-                    time.sleep(np.random.uniform(4, 6))
+                    #time.sleep(np.random.uniform(4, 6))
                 else:
                     driver.find_element_by_xpath('//*[@id="searchCell1"]/span[1]/button').click()
-                    time.sleep(np.random.uniform(4, 6))
+                    #time.sleep(np.random.uniform(4, 6))
 
                 try:
+                    try:
+                        restest = WebDriverWait(driver, 100).until(
+                        EC.element_to_be_clickable((By.XPATH, '//*[contains(@id,"RECORD_")]/div[3]/div/div[1]/div/a/value')))
+                    except:
+                        print('Timed out waiting for page loads..')
                     next_page = driver.find_element_by_xpath(
                         '//*[@id="summary_navigation"]/nav/table/tbody/tr/td[3]/a').get_attribute('href')
                     print('getting res.')
@@ -412,7 +432,10 @@ def scrape():
                     citation_lengths.append(0)
                     citations.append([])
                     # TODO: WHAT DOES THIS DO AGAIN? citation_elements += driver.find_elements_by_xpath('//*[contains(@id,"RECORD_")]/div[4]/div[1]')
-                    print('no citations?')
+                    print('search found no records.')
+                    spelling_checks = spelling_checks.append({'aid': aid, 'title': title}, ignore_index=True)
+
+                    print(spelling_checks.shape)
 
                 # return to main search
                 driver.find_element_by_xpath('/html/body/div[1]/h1/div/a').click()
@@ -423,6 +446,12 @@ def scrape():
                 print("cannot do this :(")
                 driver.quit()
 
+    try:
+        spelling_checks.to_csv('../../input_data/spellingchecks.csv', index=False)
+    except:
+        print('could not save spelling checks. Printing out instead.')
+        print('====================SPELLINGS?')
+        print(spelling_checks)
         # with WosClient('jiyooj@gmail.com', 'Poobearluv.1!') as client:
         #    print(wos.utils.query(client, 'TI=' + title))
 
