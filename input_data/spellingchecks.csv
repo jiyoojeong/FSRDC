@@ -4,6 +4,7 @@ aid,title
 418484,supermarket human resource practices   competition from mass merchandisers
 878828,second trimester sunlight   asthma evidence from two independent studies
 177261,employer size   the wage structure in  manufacturing
+339705,ethnicity language   workplace segregation evidence from a new matched employer employee data set
 578780,spatial mismatch immigrant networks   hispanic employment in the united states
 177254,using longitudinal data on establishments to analyze the effects of unio* *ganizing campaigns in the united states
 924203,sorting between   within industries a testable model of assortative matching
@@ -13,8 +14,7 @@ aid,title
 307736,race   gender differences in business ownership   business turnover
 885758,food   beverage television advertising exposure   youth consumption body mass index   adiposity outcomes viewpoint
 466699,participation in export markets   productivity of plants in los angeles 19871997
-106954,the impact of r d investment on productivity new evidence using linked r&dlrd data
-376659,technological evolution as creative destruction of process heterogeneity evidence from  plantlevel data
+376659,technological evolution as creative destruction of process heterogeneity evidence from  plant level data
 224353,the effect of technology use on productivity growth
 353675,information technology investment   firm performance in  retail trade
 307952,an option value approach to technology adoption in  manufacturing evidence from microdata
@@ -26,7 +26,7 @@ aid,title
 317685,employer offers private coverage   the tax subsidy for health insurance 1987   1996
 294595,employer contribution methods   health insurance premiums does managed competition work
 401228,employer choices of family premium sharing
-670576,persistent inter industry wage differences rent sharing   opportunity costs
+670576,persistent interindustry wage differences rent sharing   opportunity costs
 718639,the plant lifecycle of the average wage of employees in  manufacturing
 718638,the recent decline in employment dynamics
 515753,the impact of hurricanes katrina rita   wilma on business establishments
@@ -41,11 +41,9 @@ aid,title
 227747,the manufacturing plant ownership change database  its construction   usefulness
 493259,capital energy substitution revisited new evidence from micro  data
 665832,a concordance between ten digit  harmonized system codes   sic/naics product classes   industries
-412469,the flow approach to labor markets new data sources   micromacro links
 933182,economic policies with endogenous entry   exit of plants
-305963,the market for tornado safety analysis of applications to the oklahoma saferoom initiative
+305963,the market for tornado safety analysis of applications to the oklahoma safe room initiative
 326465,(startup or start up) financing owner characteristics   survival
-645091,supersize it the growth of retail chains   the rise of the bigbox store
 736059,delegation in multi establishment firms evidence from it purchasing
 887156,the effect of environmental regulation on plant level product mix a study of epas cluster rule
 855380,saying i dont the effect of the affordable care act young adult provision on marriage
@@ -54,30 +52,21 @@ aid,title
 823388,intra firm trade   vertical fragmentation in  multinational corporations
 984212,earnings inequality   mobility trends in the united states nationally representative estimates from longitudinally linked employeremployee data
 834838,its where you work increases in the dispersion of earnings across establishments   individuals in the united states
-984216,new evidence on sex segregation   sex differences in wages from matched employeeemployer data
 212026,inter firm segregation   the black/white wage gap
-440553,why are black owned businesses less successful than whiteowned businesses the role of families inheritances   business human capital
-825259,reallocation in the great recession cleansing   not
-534257,older workers access to employer sponsored retiree health insurance 20002006
 89093,firm entry   post entry performance in the  chemical industries
 119665,the extent   nature of establishment level diversification in sixteen  manufacturing industries
 982814,trouble in the tails what we know about earnings non response thirty years after lillard smith   welch
 984235,producer price dispersion real output   the analysis of production
 428402,assessing multidimensional performance environmental   economic outcomes
 984227,measuring total factor productivity technical change   the rate of returns to research   development
-570319,did vietnam veterans get sicker in the 1990s the complicated effects of military service on selfreported health
 257587,the census of construction industries database
 700062,industrial concentration of ethnic minority   women owned businesses evidence from the survey of business owners in the united states
 984223,labor reallocation employment   earnings vector auto regression evidence
 951438,screening spin outs how non compete enforceability affects the creation growth   survival of new firms
-984222,a general inter industry relatedness index
 316797,unlocking the information in integrated social data
 388112,international licensing   the strengthening of intellectual property rights in developing countries during the 1990s
-388153,population trends in metropolitan   non metropolitan america selective deconcentration   the rural rebound
-401814,do stronger intellectual property rights increase international technology transfer empirical evidence from  firmlevel panel data
 361558,economic impacts of new unionization on private sector employers 19842001
 524980,the industry lifecycle of the size distribution of firms
-705476,electricity unit value prices   purchase quantities  manufacturing plants 19632000
 122184,r d reactions to high technology import competition
 942147,male earnings marriageable men   non marital fertility evidence from the fracking boom
 984230,grownup business cycles
@@ -97,5 +86,5 @@ aid,title
 744609,looking back on three years of using the synthetic lbd beta
 827880,using partially synthetic microdata to protect sensitive cells in business statistics
 595232,structural change   industrial classification
+984219,earnings inequality   coordination costs evidence from  law firms
 339113,what determines environmental performance at paper mills the roles of abatement spending regulation   efficiency
-568710,what is the neighbourhood in neighbourhood satisfaction comparing the effects of structural characteristics measured at the microneighbourhood   tract levels

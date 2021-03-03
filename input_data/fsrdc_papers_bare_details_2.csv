@@ -114,7 +114,7 @@ article_id,year,journal,title
 960595,2019,american journal of health economics,short run effects of parental job loss on child health
 878828,2017,american journal of health economics,second trimester sunlight and asthma evidence from two independent studies
 177261,1996,annales d'economie et de statistique,employer size and the wage structure in us manufacturing
-339705,2003,annales d'economie et de statistique,(ethnicity language and workplace segregation evidence from a new matched employer employee data set)--(Workplace segregation in the United States: Race ethnicity skill)
+339705,2003,annales d'economie et de statistique,ethnicity language and workplace segregation evidence from a new matched employer employee data set
 578780,2010,annales d'economie et de statistique,spatial mismatch immigrant networks and hispanic employment in the united states
 177254,1996,annales d'economie et de statistique,using longitudinal data on establishments to analyze the effects of unio* *ganizing campaigns in the united states
 924203,2018,annals of economics and statistics/annales d'economie et de statistique,sorting between and within industries a testable model of assortative matching
@@ -205,14 +205,14 @@ article_id,year,journal,title
 174807,1996,economic inquiry,estimating capital efficiency schedules within production functions
 984220,2018,economic inquiry,multiregional firms and region switching in the us manufacturing sector
 868198,2016,economic inquiry,intellectual property protection and the industrial composition of multinational activity
-106954,1991,economic inquiry,the impact of r&d investment on productivity new evidence using linked r&dlrd data
+106954,1991,economic inquiry,the impact of r&d investment on productivity new evidence using linked r&d lrd data
 511607,2009,economic journal,reaching for the stars who pays for talent in innovative industries
 442011,2007,economic journal,does employment protection reduce productivity evidence from us states
 344886,2004,economic journal,whats driving the new economy the benefits of workplace innovation
 486779,2008,economic journal,energy prices and the adoption of energy saving technology
 48499,1985,economic journal,effects of worker attitudes on production costs and the value of capital input
 920277,2018,economic policy,is regulation to blame for the decline in american entrepreneurship
-376659,2005,economic systems research,technological evolution as creative destruction of process heterogeneity evidence from us plantlevel data
+376659,2005,economic systems research,technological evolution as creative destruction of process heterogeneity evidence from us plant level data
 159997,1995,economica,wages employment structure and employer size wage premia their relationship to advanced technology usage at us manufacturing establishments
 826492,2016,economica,the slow growth of new plants learning about demand
 431709,2007,economica,the dynamics of worker reallocation within and across industries
@@ -307,7 +307,7 @@ article_id,year,journal,title
 406610,2006,international regional science review,is there really an export wage premium a case study of los angeles using matched employee employer data
 549172,2010,international review of economics and finance,tariffs versus anti dumping duties
 375643,2005,international review of law and economics,alcohol drugs and violent crime
-670576,2012,iza journal of labor economics,persistent inter industry wage differences rent sharing and opportunity costs
+670576,2012,iza journal of labor economics,persistent interindustry wage differences rent sharing and opportunity costs
 718639,2013,iza journal of labor economics,the plant lifecycle of the average wage of employees in us manufacturing
 718638,2013,iza journal of labor economics,the recent decline in employment dynamics
 515613,2009,japan and the world economy,measuring network effects on trade a reexamination
@@ -366,7 +366,7 @@ article_id,year,journal,title
 920720,2018,journal of economic literature,global firms
 442874,2007,journal of economic perspectives,firms in international trade
 729662,2014,journal of economic perspectives,fluctuations in uncertainty
-412469,2006,journal of economic perspectives,the flow approach to labor markets new data sources and micromacro links
+412469,2006,journal of economic perspectives,the flow approach to labor markets new data sources and micro macro links
 738617,2014,journal of economic perspectives,the role of entrepreneurship in us job creation and economic dynamism
 917816,2018,journal of economic perspectives,new perspectives on the decline of us manufacturing employment
 871949,2017,journal of economic perspectives,the new life cycle of women s employment disappearing humps sagging middles expanding tops
@@ -376,10 +376,10 @@ article_id,year,journal,title
 795435,2015,journal of economic perspectives,household surveys in crisis
 597062,2011,journal of economic perspectives,internal migration in the united states
 933182,2018,journal of economic theory and econometrics,economic policies with endogenous entry and exit of plants
-305963,2002,journal of economics (mvea),the market for tornado safety analysis of applications to the oklahoma saferoom initiative
+305963,2002,journal of economics (mvea),the market for tornado safety analysis of applications to the oklahoma safe room initiative
 326465,2003,journal of economics and business,startup financing owner characteristics and survival
 467703,2008,journal of economics and business,analysis of young neighborhood firms serving urban minority clients
-645091,2012,journal of economics and management strategy,"supersize it the growth of retail chains and the rise of the ""bigbox"" store"
+645091,2012,journal of economics and management strategy,"supersize it the growth of retail chains and the rise of the ""big box"" store"
 902985,2017,journal of economics and management strategy,customer employee substitution evidence from gasoline stations
 759633,2014,journal of economics and management strategy,labor regulations and european venture capital
 876219,2017,journal of economics and management strategy,taking the leap the determinants of entrepreneurs hiring their first employee
@@ -499,12 +499,12 @@ article_id,year,journal,title
 973157,2019,journal of labor economics,local labor markets in canada and the united states
 834838,2016,journal of labor economics,its where you work increases in the dispersion of earnings across establishments and individuals in the united states
 984209,2018,journal of labor economics,augmenting the human capital earnings equation with measures of where people work
-984216,2003,journal of labor economics,new evidence on sex segregation and sex differences in wages from matched employeeemployer data
+984216,2003,journal of labor economics,new evidence on sex segregation and sex differences in wages from matched employee employer data
 212026,1998,journal of labor economics,inter firm segregation and the black/white wage gap
 301126,2002,journal of labor economics,nondiscrimination rules and the distribution of fringe benefits
 87702,1989,journal of labor economics,plant turnover and gross employment flows in the us manufacturing sector
 984217,2004,journal of labor economics,wage and productivity dispersion in united states manufacturing the role of computer investment
-440553,2007,journal of labor economics,why are black owned businesses less successful than whiteowned businesses the role of families inheritances and business human capital
+440553,2007,journal of labor economics,why are black owned businesses less successful than white owned businesses the role of families inheritances and business human capital
 542903,2010,journal of labor economics,preschoolers enrolled and mothers at work the effects of universal prekindergarten
 825259,2016,journal of labor economics,reallocation in the great recession cleansing ""or"" not
 690324,2013,journal of labor economics,wage premia in employment clusters how important is worker heterogeneity
@@ -517,7 +517,7 @@ article_id,year,journal,title
 780867,2015,journal of labor economics,job referral networks and the determination of earnings in local labor markets
 754207,2014,journal of labor research,do as the neighbors do examining the effect of residential neighborhoods on labor market outcomes
 841199,2016,journal of labor research,disconnected geography a spatial analysis of disconnected youth in the united states
-534257,2009,journal of labor research,older workers access to employer sponsored retiree health insurance 20002006
+534257,2009,journal of labor research,older workers access to employer sponsored retiree health insurance 2000 2006
 959141,2019,journal of labor research,differences in self employment duration by year of entry and pre entry wage sector attachment
 632740,2012,journal of labor research,changes in firm pension policy trends away from traditional defined benefit plans
 657932,2012,journal of labor research,workers unions and takeovers
@@ -687,7 +687,7 @@ article_id,year,journal,title
 221842,1998,quarterly journal of economics,implications of skill biased technological change international evidence
 608329,2011,quarterly journal of economics,multiproduct firms and trade liberalization
 982907,2019,quarterly journal of economics,firming up inequality
-401814,2006,quarterly journal of economics,do stronger intellectual property rights increase international technology transfer empirical evidence from us firmlevel panel data
+401814,2006,quarterly journal of economics,do stronger intellectual property rights increase international technology transfer empirical evidence from us firm level panel data
 124689,1992,quarterly journal of economics,gross job creation gross job destruction and employment reallocation
 719023,2013,quarterly journal of economics,the establishment level behavior of vacancies and hiring
 361558,2004,quarterly journal of economics,economic impacts of new unionization on private sector employers 19842001
@@ -864,7 +864,7 @@ article_id,year,journal,title
 312025,2002,urban studies,tracing the sources of local external economies
 715087,2013,urban studies,why do higher income households choose low income neighbourhoods pioneering ""or"" thrift
 359203,2004,urban studies,the impact of violence surges on neighbourhood business activity
-568710,2010,urban studies,"what is the ""neighbourhood"" in neighbourhood satisfaction comparing the effects of structural characteristics measured at the microneighbourhood and tract levels"
+568710,2010,urban studies,"what is the ""neighbourhood"" in neighbourhood satisfaction comparing the effects of structural characteristics measured at the micro neighbourhood and tract levels"
 238897,1999,weltwirtschaftliches archiv/review of world economics,multinationals production efficiency and spillover effects the case of the us auto parts industry
 202727,1997,world bank economic review,formal and informal regulation of industrial pollution comparative evidence from indonesia and the united states
 504007,2009,world economy,factor prices factor substitution and exporting in us manufacturing affiliates abroad

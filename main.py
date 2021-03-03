@@ -73,6 +73,11 @@ def scrape():
     except:
         spelling_checks = pd.DataFrame(columns=['aid', 'title'])
 
+    try:
+        nocits = pd.read_csv('input_data/no_citations.csv', header=0)
+    except:
+        nocits = pd.DataFrame(columns=['aid', 'title'])
+
     for idx, row in bare_details.iterrows():
         aid = row['article_id']
         title = row['title']
@@ -139,13 +144,22 @@ def scrape():
                 # print('us changed==', title)
             #print('quotes changed==', title)
 
+        if re.search(r'\bnot\b', title):
+            title = re.sub(r'\bnot\b', '\"not\"', title)
+                # print('us changed==', title)
+            #print('quotes changed==', title)
+
+        if re.search('ethnicity language and workplace segregation evidence from a new matched employer employee data set', title):
+            newstr = 'Workplace segregation in the United States: Race ethnicity skill'
+            title = newstr #re.sub('ethnicity language and workplace segregation evidence from a new matched employer employee data set', newstr, title)
+
         journal = row['journal']
         year = row['year']
         if 'output_data/raw' not in os.getcwd():
             os.chdir('output_data/raw')
         if str(aid) + '.txt' in os.listdir():
             print('this is already downloaded.')
-        elif idx < 0 or aid not in spelling_checks['aid']:
+        elif idx < 0 or aid in nocits['aid']:
             print('this has already been looked up. skipping.')
         else:
             search_bar = WebDriverWait(driver, 100).until(
@@ -202,11 +216,12 @@ def scrape():
                         # select title
 
                     try:
+                        print('keys sent with pub name.')
                         select = Select(driver.find_element_by_id('select2'))  # TODO: maybe select2?
                         select.select_by_visible_text('Publication Name')
                     except:
                         # do nothing
-                        print()
+                        print('keys sent without pub name.')
 
                         # TODO: check for 'no result' case, and for some it comes up as "cannot do this"
                     time.sleep(np.random.uniform(1, 2))
@@ -216,242 +231,259 @@ def scrape():
                 else:
                     driver.find_element_by_xpath('//*[@id="searchCell1"]/span[1]/button').click()
                     #time.sleep(np.random.uniform(4, 6))
-
+                    print('sending.')
+                time.sleep(np.random.uniform(2, 3))
                 try:
+                    spelling = True
                     try:
-                        restest = WebDriverWait(driver, 100).until(
-                        EC.element_to_be_clickable((By.XPATH, '//*[contains(@id,"RECORD_")]/div[3]/div/div[1]/div/a/value')))
+                        restest = WebDriverWait(driver, 10).until(
+                        EC.element_to_be_clickable((By.XPATH, '//*[contains(@id,"RECORD_1")]/div[3]/div/div[1]/div/a/value')))
                     except:
-                        print('Timed out waiting for page loads..')
-                    next_page = driver.find_element_by_xpath(
-                        '//*[@id="summary_navigation"]/nav/table/tbody/tr/td[3]/a').get_attribute('href')
-                    print('getting res.')
-                    results = driver.find_elements_by_xpath('//*[contains(@id,"RECORD_")]/div[3]/div/div[1]/div/a/value')
-                    # = driver.find_element_by_xpath('//*[contains(@id,"show_journal_overlay_link")]/a/span/value')
-                    '//*[contains(@id,"show_journal_overlay_link")]/a/span/value'
+                        print('no load...')
+                        spelling_checks = spelling_checks.append({'aid': aid, 'title': title}, ignore_index=True)
+                        print(spelling_checks.shape)
+                        spelling = False
 
-                    citations_temp = driver.find_elements_by_xpath('//*[contains(@id,"RECORD_")]/div[4]/div[1]')
-                    keep_idx = []
-                    print('len', len(results))
-
-                    # '//*[@id="RECORD_1"]/div[3]/div/div[1]/div/a/value'
-                    # '//*[@id="RECORD_2"]/div[3]/div/div[1]/div/a/value'
-
-                    for i in range(0, len(results)):
-                        #print('-----------------A------------------')
-                        res_text = results[i].text
-                        # print(res_text)
-                        #print('-----------------B------------------')
-                        score = nltk.edit_distance(res_text.lower(), title) / len(title)
-
-                        #print('-----------------C------------------')
-                        if score > .3 and i >= 1:
-                         #   print('-----------------D------------------')
-                            print(title, 'to', res_text, 'is too diff. Remove.', 'score:', score)
-                            # remove from list
-                        else:
-                          #  print('-----------------E------------------')
-                            keep_idx.append(i)
-
-
-                    results = filter(results, keep_idx)
-                    # journals = filter(journals, keep_idx)
-                    citations_temp = filter(citations_temp, keep_idx)
-                    print('finished filter stage')
-
-                    # click and download!!
-                    for citation in citations_temp:
-                        #print("clicking stage.")
-                        try:
-                            url = citation.find_element_by_tag_name('a').get_attribute('href')
-                            # print(' -- url gotten.')
-                            driver.get(url)
-                            time.sleep(3)
-                            driver.find_element_by_xpath(
-                                '//*[@id="view_citation_report_image_placeholder"]/div/div/a').click()
-                            time.sleep(np.random.uniform(1, 2))
-
-                            driver.find_element_by_xpath(
-                                '//*[@id="cr-export-options"]/div/span/span/span[1]/span/span[2]/b').click()
-                            time.sleep(np.random.uniform(1, 2))
-                            # select txt file
-                            select = Select(driver.find_element_by_id('cr_saveToMenuTop'))
-                            # '//*[@id="cr_saveToMenuTop"]'
-
-                            select.select_by_visible_text('Save to Text File')
-                            print('select works')
-                            time.sleep(np.random.uniform(1, 2))
-                            # time.sleep(30)
-
-                            # not necessary
-                            # driver.find_element_by_xpath('//*[@id="cr-export-options"]/div/span/span/span[1]').click()
-
-                            print('downloading...')
-                            all_records = WebDriverWait(driver, 100).until(
-                                EC.element_to_be_clickable((By.XPATH, '//*[@id="numberOfRecordsAllOnPage"]')))
-                            all_records.click()
-
-                            export = WebDriverWait(driver, 100).until(
-                                EC.element_to_be_clickable((By.XPATH, '//*[@id="exportButton"]')))
-                            export.click()
-
-                            time.sleep(np.random.uniform(7, 10))
-
-                            try:
-                                # rename file
-                                # print(os.getcwd())
-                                if os.getcwd() != '/Users/jiyoojeong/Desktop/C/FSRDC_Papers/output_data/raw':
-                                    os.chdir('output_data/raw')
-                                print(os.getcwd())
-                                # print(type(aid), aid)
-                                said = str(aid)
-                                if said + '.txt' in os.listdir():
-                                    print("this article file already exists...")
-                                try:
-                                    os.rename('savedrecs.txt', said + '.txt')
-                                except:
-                                    print('doing some weird shit')
-                                    lst = os.listdir()
-                                    print(lst)
-                                    mask = [1 if 'savedrecs' in n else 0 for n in lst]
-                                    i = np.argmax(mask)[0]
-                                    print(lst[i])
-                                    os.rename(lst[i], aid + '.txt')
-                                print('this worked.')
-                            except OSError:
-                                # Failed
-                                print("FAILED TO change name.")
-                            driver.back()
-                            time.sleep(np.random.uniform(1, 2))
-                            # driver.back() #TODO: is this needed?
-
-                            citation_elements += citations_temp
-                            citations_temp = []
-                        except:
-                            print("this paper was not cited ever.")
-
-
-                    ## LOOP FOR ADDITIONAL PAGES
-                    while next_page != "javascript: void('paginationNext')":
-
-                        print('getting more results.')
-                        keep_idx = []
-
+                    if spelling:
                         next_page = driver.find_element_by_xpath(
-                            '//*[@id="summary_navigation"]/nav/table/tbody/tr/td[3]/a').click()
-                        time.sleep(np.random.uniform(.5, 1))
+                            '//*[@id="summary_navigation"]/nav/table/tbody/tr/td[3]/a').get_attribute('href')
+                        print('getting res.')
+                        results = driver.find_elements_by_xpath('//*[contains(@id,"RECORD_")]/div[3]/div/div[1]/div/a/value')
+                        # = driver.find_element_by_xpath('//*[contains(@id,"show_journal_overlay_link")]/a/span/value')
+                        '//*[contains(@id,"show_journal_overlay_link")]/a/span/value'
 
-                        results = driver.find_elements_by_xpath('//*[@id="RECORD_"]/div[3]/div/div[1]/div/a/value')
-                        journals = driver.find_element_by_xpath(
-                            '//*[contains(@id,"show_journal_overlay_link")]/a/span/value')
+                        citations_temp = driver.find_elements_by_xpath('//*[contains(@id,"RECORD_")]/div[4]/div[1]')
+                        keep_idx = []
+                        print('len', len(results))
 
-                        citations_temp += driver.find_elements_by_xpath('//*[contains(@id,"RECORD_")]/div[4]/div[1]')
+                        # '//*[@id="RECORD_1"]/div[3]/div/div[1]/div/a/value'
+                        # '//*[@id="RECORD_2"]/div[3]/div/div[1]/div/a/value'
 
                         for i in range(0, len(results)):
+                            #print('-----------------A------------------')
                             res_text = results[i].text
+                            # print(res_text)
+                            #print('-----------------B------------------')
                             score = nltk.edit_distance(res_text.lower(), title) / len(title)
-                            if score > .3 and i > 1:
-                                print(title, 'to', res_text, 'titles too different.')
+
+                            #print('-----------------C------------------')
+                            if score > .3 and i >= 1:
+                             #   print('-----------------D------------------')
+                                print(title, 'to', res_text, 'is too diff. Remove.', 'score:', score)
                                 # remove from list
-                                #if len(results) <= 1:
-                                    #print('few results, better check journals')
-                                    #resjournal = journals[i].text
-                                    #jscore = nltk.edit_distance(resjournal.lower(), journal)
-                                    #print('jscore gotted.')
-                                    #if resjournal in journal or journal in resjournal:
-                                    #    print(resjournal, '==', journal, '=BY=', jscore)
-                                        # do not remove.
-                                        # keep_idx.append(i)
                             else:
+                              #  print('-----------------E------------------')
                                 keep_idx.append(i)
 
+
                         results = filter(results, keep_idx)
+                        # journals = filter(journals, keep_idx)
                         citations_temp = filter(citations_temp, keep_idx)
-                        print('filtered, len_citations temp=', len(citations_temp))
+                        print('finished filter stage')
 
+                        # click and download!!
                         for citation in citations_temp:
-                            #print("clicking stage.")
-                            url = citation.find_element_by_tag_name('a').get_attribute('href')
-                            #print(' -- url gotten.')
-                            driver.get(url)
-                            time.sleep(1)
-                            driver.find_element_by_xpath(
-                                '//*[@id="view_citation_report_image_placeholder"]/div/div/a').click()
-                            time.sleep(np.random.uniform(1, 2))
-
-                            driver.find_element_by_xpath(
-                                '//*[@id="cr-export-options"]/div/span/span/span[1]/span/span[2]/b').click()
-                            time.sleep(np.random.uniform(1, 2))
-                            # select txt file
-                            select = Select(driver.find_element_by_id('cr_saveToMenuTop'))
-                            # '//*[@id="cr_saveToMenuTop"]'
-
-                            select.select_by_visible_text('Save to Text File')
-                            print('select works')
-                            time.sleep(np.random.uniform(1, 2))
-                            # time.sleep(30)
-
-                            # not necessary
-                            # driver.find_element_by_xpath('//*[@id="cr-export-options"]/div/span/span/span[1]').click()
-
-                            print('input found.')
-                            all_records = WebDriverWait(driver, 100).until(
-                                EC.element_to_be_clickable((By.XPATH, '//*[@id="numberOfRecordsAllOnPage"]')))
-                            all_records.click()
-
-                            export = WebDriverWait(driver, 100).until(
-                                EC.element_to_be_clickable((By.XPATH, '//*[@id="exportButton"]')))
-                            export.click()
-
-                            # wait for download
-                            wait_time = download_wait('output_data/raw', 30)
-                            if wait_time == 30:
-                                download_wait('output_data/raw', 30)
-
-                            print('this worked.')
+                            print("clicking stage.")
                             try:
-                                # rename file
-                                os.chdir('output_data/raw')
-                                if aid + '.txt' in os.listdir():
-                                    print("this article file already exists... something went wrong.")
-                                os.rename('savedrecs.txt', aid + '.txt')
-                            except OSError:
-                                # Failed
-                                print("FAILED TO change name.")
-                        next_page.click()
+                                url = citation.find_element_by_tag_name('a').get_attribute('href')
+                                print(' -- url gotten.')
+                                driver.get(url)
+                                time.sleep(3)
+                                driver.find_element_by_xpath(
+                                    '//*[@id="view_citation_report_image_placeholder"]/div/div/a').click()
+                                time.sleep(np.random.uniform(1, 2))
 
-                        citation_elements += citations_temp
-                        citations_temp = driver.find_elements_by_xpath('//*[contains(@id,"RECORD_")]/div[4]/div[1]')
-                        time.sleep(np.random.uniform(.5, 1))
-                    print('len citations == ', len(citation_elements))
+                                driver.find_element_by_xpath(
+                                    '//*[@id="cr-export-options"]/div/span/span/span[1]/span/span[2]/b').click()
+                                time.sleep(np.random.uniform(1, 2))
+                                # select txt file
+                                select = Select(driver.find_element_by_id('cr_saveToMenuTop'))
+                                # '//*[@id="cr_saveToMenuTop"]'
 
-                    # aggregate
-                    citation_lengths.append(len(citation_elements))
-                    citations.append(citation_elements)
+                                select.select_by_visible_text('Save to Text File')
+                                print('select works')
+                                time.sleep(np.random.uniform(1, 2))
+                                # time.sleep(30)
+
+                                # not necessary
+                                # driver.find_element_by_xpath('//*[@id="cr-export-options"]/div/span/span/span[1]').click()
+
+                                print('downloading...')
+                                all_records = WebDriverWait(driver, 100).until(
+                                    EC.element_to_be_clickable((By.XPATH, '//*[@id="numberOfRecordsAllOnPage"]')))
+                                all_records.click()
+
+                                export = WebDriverWait(driver, 100).until(
+                                    EC.element_to_be_clickable((By.XPATH, '//*[@id="exportButton"]')))
+                                export.click()
+
+                                time.sleep(np.random.uniform(7, 10))
+
+                                try:
+                                    # rename file
+                                    # print(os.getcwd())
+                                    if os.getcwd() != '/Users/jiyoojeong/Desktop/C/FSRDC_Papers/output_data/raw':
+                                        os.chdir('output_data/raw')
+                                    print(os.getcwd())
+                                    # print(type(aid), aid)
+                                    said = str(aid)
+                                    if said + '.txt' in os.listdir():
+                                        print("this article file already exists...")
+                                    try:
+                                        os.rename('savedrecs.txt', said + '.txt')
+                                    except:
+                                        print('doing some weird shit')
+                                        lst = os.listdir()
+                                        print(lst)
+                                        mask = [1 if 'savedrecs' in n else 0 for n in lst]
+                                        i = np.argmax(mask)[0]
+                                        print(lst[i])
+                                        os.rename(lst[i], aid + '.txt')
+                                    print('this worked.')
+                                except OSError:
+                                    # Failed
+                                    print("FAILED TO change name.")
+                                driver.back()
+                                time.sleep(np.random.uniform(1, 2))
+                                # driver.back() #TODO: is this needed?
+
+                                citation_elements += citations_temp
+                                citations_temp = []
+                            except:
+                                nocits = nocits.append({'aid': aid, 'title': title}, ignore_index=True)
+                                print("this paper was not cited ever.")
+
+
+                        ## LOOP FOR ADDITIONAL PAGES
+                        while next_page != "javascript: void('paginationNext')":
+
+                            print('getting more results.')
+                            keep_idx = []
+
+                            next_page = driver.find_element_by_xpath(
+                                '//*[@id="summary_navigation"]/nav/table/tbody/tr/td[3]/a').click()
+                            time.sleep(np.random.uniform(.5, 1))
+
+                            results = driver.find_elements_by_xpath('//*[@id="RECORD_"]/div[3]/div/div[1]/div/a/value')
+                            journals = driver.find_element_by_xpath(
+                                '//*[contains(@id,"show_journal_overlay_link")]/a/span/value')
+
+                            citations_temp += driver.find_elements_by_xpath('//*[contains(@id,"RECORD_")]/div[4]/div[1]')
+
+                            for i in range(0, len(results)):
+                                res_text = results[i].text
+                                score = nltk.edit_distance(res_text.lower(), title) / len(title)
+                                if score > .3 and i > 1:
+                                    print(title, 'to', res_text, 'titles too different.')
+                                    # remove from list
+                                    #if len(results) <= 1:
+                                        #print('few results, better check journals')
+                                        #resjournal = journals[i].text
+                                        #jscore = nltk.edit_distance(resjournal.lower(), journal)
+                                        #print('jscore gotted.')
+                                        #if resjournal in journal or journal in resjournal:
+                                        #    print(resjournal, '==', journal, '=BY=', jscore)
+                                            # do not remove.
+                                            # keep_idx.append(i)
+                                else:
+                                    keep_idx.append(i)
+
+                            results = filter(results, keep_idx)
+                            citations_temp = filter(citations_temp, keep_idx)
+                            print('filtered, len_citations temp=', len(citations_temp))
+
+                            for citation in citations_temp:
+                                #print("clicking stage.")
+                                url = citation.find_element_by_tag_name('a').get_attribute('href')
+                                #print(' -- url gotten.')
+                                driver.get(url)
+                                time.sleep(1)
+                                driver.find_element_by_xpath(
+                                    '//*[@id="view_citation_report_image_placeholder"]/div/div/a').click()
+                                time.sleep(np.random.uniform(1, 2))
+
+                                driver.find_element_by_xpath(
+                                    '//*[@id="cr-export-options"]/div/span/span/span[1]/span/span[2]/b').click()
+                                time.sleep(np.random.uniform(1, 2))
+                                # select txt file
+                                select = Select(driver.find_element_by_id('cr_saveToMenuTop'))
+                                # '//*[@id="cr_saveToMenuTop"]'
+
+                                select.select_by_visible_text('Save to Text File')
+                                print('select works')
+                                time.sleep(np.random.uniform(1, 2))
+                                # time.sleep(30)
+
+                                # not necessary
+                                # driver.find_element_by_xpath('//*[@id="cr-export-options"]/div/span/span/span[1]').click()
+
+                                print('input found.')
+                                all_records = WebDriverWait(driver, 100).until(
+                                    EC.element_to_be_clickable((By.XPATH, '//*[@id="numberOfRecordsAllOnPage"]')))
+                                all_records.click()
+
+                                export = WebDriverWait(driver, 100).until(
+                                    EC.element_to_be_clickable((By.XPATH, '//*[@id="exportButton"]')))
+                                export.click()
+
+                                # wait for download
+                                wait_time = download_wait('output_data/raw', 30)
+                                if wait_time == 30:
+                                    download_wait('output_data/raw', 30)
+
+                                print('this worked.')
+                                try:
+                                    # rename file
+                                    os.chdir('output_data/raw')
+                                    if aid + '.txt' in os.listdir():
+                                        print("this article file already exists... something went wrong.")
+                                    os.rename('savedrecs.txt', aid + '.txt')
+                                except OSError:
+                                    # Failed
+                                    print("FAILED TO change name.")
+                            next_page.click()
+
+                            citation_elements += citations_temp
+                            citations_temp = driver.find_elements_by_xpath('//*[contains(@id,"RECORD_")]/div[4]/div[1]')
+                            time.sleep(np.random.uniform(.5, 1))
+                        print('len citations == ', len(citation_elements))
+
+                        # aggregate
+                        citation_lengths.append(len(citation_elements))
+                        citations.append(citation_elements)
                 except:
                     citation_lengths.append(0)
                     citations.append([])
-                    # TODO: WHAT DOES THIS DO AGAIN? citation_elements += driver.find_elements_by_xpath('//*[contains(@id,"RECORD_")]/div[4]/div[1]')
-                    print('search found no records.')
-                    spelling_checks = spelling_checks.append({'aid': aid, 'title': title}, ignore_index=True)
-
-                    print(spelling_checks.shape)
+                    print('Some error occured...')
 
                 # return to main search
                 driver.find_element_by_xpath('/html/body/div[1]/h1/div/a').click()
                 print('returning...')
-                time.sleep(np.random.uniform(1, 2))
+                time.sleep(np.random.uniform(3, 4))
 
             except BaseException:
                 print("cannot do this :(")
                 driver.quit()
 
     try:
+        spelling_checks.drop_duplicates(inplace=True)
         spelling_checks.to_csv('../../input_data/spellingchecks.csv', index=False)
+        print('--- saved spellings ---')
     except:
         print('could not save spelling checks. Printing out instead.')
         print('====================SPELLINGS?')
         print(spelling_checks)
+        # with WosClient('jiyooj@gmail.com', 'Poobearluv.1!') as client:
+        #    print(wos.utils.query(client, 'TI=' + title))
+
+    try:
+        nocits = nocits.drop_duplicates(inplace=True)
+        nocits.to_csv('../../input_data/no_citations.csv', index=False)
+        print('--- saved nocits ---')
+    except:
+        print('could not saveno citations. Printing out instead.')
+        print('====================NOCITS?')
+        print(nocits)
         # with WosClient('jiyooj@gmail.com', 'Poobearluv.1!') as client:
         #    print(wos.utils.query(client, 'TI=' + title))
 
@@ -496,5 +528,6 @@ if __name__ == '__main__':
     #os.chdir('output_data/raw')
     num = len(os.listdir())
     print("total files:", str(num))
+
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
