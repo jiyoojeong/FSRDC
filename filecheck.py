@@ -46,15 +46,21 @@ def check():
     save = pd.DataFrame(columns=['aid', 'title', 'reason'])
     alldowns = os.listdir()
     alldowns = [re.sub('\.txt', '', t) for t in alldowns]
+    print(alldowns)
     mispel = spellings.loc[:, 'aid'].values
+
     for idx, row in bare_details.iterrows():
         aid = row['article_id']
         title = row['title']
         # print(aid)
-        if aid not in alldowns and aid in mispel:
+        print(aid in alldowns)
+        print(aid in mispel)
+        print(type(aid), type(alldowns[0]), type(mispel[0]))
+
+        if str(aid) not in alldowns and aid in mispel:
             print('no wos', aid)
             save = save.append({'aid': aid, 'title': title, 'reason': 'Not in WOS or Misspelling'}, ignore_index=True)
-        elif aid not in alldowns:
+        elif str(aid) not in alldowns:
             print('no cit', aid)
             save = save.append({'aid': aid, 'title': title, 'reason': 'No citations'}, ignore_index=True)
 

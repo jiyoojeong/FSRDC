@@ -56,33 +56,50 @@ def semanticsDOI():
         title = paper['Title']
         journal = paper['journal']
         a = paper['abstract']
+
         print('=============journal no.', str(idx + 1), '\n:::', aid, ':::', title)
-        if a != 0:
+        print('abs', a, type(a))
+        if a != None and a != np.nan and a != 0 and a != '0': #and a != 'No Result.'
+            #print('no res', a == 'No Result.')
+            #print('nan', a == np.nan)
+            #print('None', a == None)
+            #print('0', a == 0)
+            #print('string 0', a == '0')
+            assert len(a) >= 3
             print("this is alr done")
             # print(a)
-
         else:
             driver.get(url)
             search_bar = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="search-form"]/div/div/input')))
-            time.sleep(np.random.uniform(.5,1))
+            time.sleep(np.random.uniform(1, 2))
             query = title + ' ' + str(year)
             search_bar.send_keys(query)
-            time.sleep(np.random.uniform(.5,1))
+            time.sleep(np.random.uniform(1, 2))
             driver.find_element_by_xpath('//*[@id="search-form"]/div/div/button').click()
-            time.sleep(np.random.uniform(.5,1))
+            time.sleep(np.random.uniform(1, 2))
             try:
-                WebDriverWait(driver, 100).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="app"]/div[1]/div[2]/div/div[1]/div/div[1]/div')))
+                WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="app"]/div[1]/div[2]/div/div[1]/div/div[1]/div')))
             except:
-                driver = webdriver.Chrome(executable_path='/Users/jiyoojeong/desktop/c/FSRDC_Papers/chromedriver88',
-                                          options=chrome_options)
-                driver.get(url)
-                search_bar = WebDriverWait(driver, 2).until(
-                    EC.element_to_be_clickable((By.XPATH, '//*[@id="search-form"]/div/div/input')))
-                time.sleep(np.random.uniform(.5,1))
-                search_bar.send_keys(query)
-                time.sleep(np.random.uniform(.5,1))
-                driver.find_element_by_xpath('//*[@id="search-form"]/div/div/button').click()
-                time.sleep(np.random.uniform(.5,1))
+                try:
+                    driver.refresh()
+                    search_bar = WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="search-form"]/div/div/input')))
+                    time.sleep(np.random.uniform(1, 2))
+                    search_bar.send_keys(query)
+                    time.sleep(np.random.uniform(1, 2))
+                    driver.find_element_by_xpath('//*[@id="search-form"]/div/div/button').click()
+                    time.sleep(np.random.uniform(1, 2))
+                except:
+                    driver.quit()
+                    driver = webdriver.Chrome(executable_path='/Users/jiyoojeong/desktop/c/FSRDC_Papers/chromedriver88',
+                                              options=chrome_options)
+                    driver.get(url)
+                    search_bar = WebDriverWait(driver, 2).until(
+                        EC.element_to_be_clickable((By.XPATH, '//*[@id="search-form"]/div/div/input')))
+                    time.sleep(np.random.uniform(1, 2))
+                    search_bar.send_keys(query)
+                    time.sleep(np.random.uniform(1, 2))
+                    driver.find_element_by_xpath('//*[@id="search-form"]/div/div/button').click()
+                    time.sleep(np.random.uniform(1, 2))
             result_titles = driver.find_elements_by_xpath('//*[@id="main-content"]/div[1]/div/div[1]/a/div')
             # ONLY LOOK AT FIRST PAGE OF SEARCH RESULTS.
             if len(result_titles) == 0:
@@ -152,7 +169,31 @@ def semanticsDOI():
     return final_search
 
 
+def resetfile():
+    final_search = pd.read_csv('input_data/to_find_final_3.csv', header=0, )
+    print('fin done')
+    abstracts = pd.read_csv('output_data/abstracts_v1.csv', header=0)
+    print('abs done')
+    print(abstracts.head())
+    final_search['abstract'] = 0
+    for idx, row in abstracts.iterrows():
+        aid = row['articleID']
+        a = row['abstract']
+        fidx = final_search['articleID'] == aid
+        # print('fidx')
+        if a == 0:
+            final_search.loc[fidx, 'abstract'] = 0
+        elif a != 0:
+            final_search.loc[fidx, 'abstract'] = a
+        else:
+            final_search.loc[fidx, 'abstract'] = 0
+
+    final_search.to_csv('output_data/abstracts_v1.csv', index=False)
+
+
 if __name__ == '__main__':
+    # reset
+    # resetfile()
     fin = semanticsDOI()
     fin.to_csv('output_data/sus.csv', index=False)
 
